@@ -11,8 +11,6 @@ except IndexError:
     exit(0)
 
 
-
-
 parser = argparse.ArgumentParser(description='My Command')
 parser.add_argument('--verbose', action='store_true', help='Display all output')
 parser.add_argument('--nobuild', action='store_false', help='Do not build')
@@ -24,53 +22,42 @@ parser.add_argument('-m', help='Git Message')
 args = parser.parse_args()
 
 
+
+def RunProcess(message):
+    print("\nRunning \"" + message + "\"\n")
+    proc = subprocess.Popen(message, shell=True)
+    proc.wait()
+
 '''
 ############### Cleanup ###############
 if args.clean:
-    output = subprocess.run("rm -rf build", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("rm -rf build")
 
-    output = subprocess.run("rm -rf dist", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("rm -rf dist")
 
-    output = subprocess.run("rm dist.zip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("rm dist.zip")
 
-    output = subprocess.run("rm WorldAnvilOfflineWiki.spec", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("rm *.spec")
 
     exit(0)
 '''
 ############### Build and ZIP ###############
 if args.nobuild:
-    output = subprocess.run("pyinstaller --onefile Source/WorldAnvilOfflineWiki.py", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(output.returncode)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("pyinstaller --onefile Source/WorldAnvilOfflineWiki.py")
 
-    output = subprocess.run("zip dist.zip dist//WorldAnvilOfflineWiki", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(output.returncode)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("zip dist.zip dist//WorldAnvilOfflineWiki")
 
 
 
 ############### GIT ###############
 if args.nogit:
-    output = subprocess.run("git add *", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(output.returncode)
-    if args.verbose: print(output.stdout.decode())
+    RunProcess("git add *")
+
+    RunProcess("git commit -m " + sys.argv[1])
+
+    RunProcess("git push")
 
 
-    output = subprocess.run("git commit -m" + sys.argv[1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output.wait()
-    if args.verbose: print(output.stdout.decode())
-
-    output = subprocess.run("git push", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output.wait()
-    if args.verbose: print(output.stdout.decode())
-
-
-
-subprocess.run()
 
 
 
