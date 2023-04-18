@@ -4,8 +4,12 @@ import argparse
 import subprocess
 import sys
 
-if not sys.argv[0]:
-    exit("Enter Commit Message")
+try:
+    sys.argv[1]
+except IndexError:
+    print("Missing Commit Message")
+    exit(0)
+
 
 
 
@@ -14,6 +18,8 @@ parser.add_argument('--verbose', action='store_true', help='Display all output')
 parser.add_argument('--nobuild', action='store_false', help='Do not build')
 parser.add_argument('--nogit', action='store_false', help='No Git Interaction')
 parser.add_argument('--clean', action='store_false', help='Delete old builds')
+parser.add_argument('-m', help='Git Message')
+
 # Parse the arguments
 args = parser.parse_args()
 
@@ -51,13 +57,12 @@ if args.nogit:
     if args.verbose: print(output.stdout.decode())
 
 
-    output = subprocess.run("git commit", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = subprocess.run("git commit -m" + sys.argv[1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if args.verbose: print(output.stdout.decode())
-    none = input("in4")
 
     output = subprocess.run("git push", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if args.verbose: print(output.stdout.decode())
-    none = input("in5")
+
 
 
 
