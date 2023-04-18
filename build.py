@@ -44,9 +44,11 @@ if args.clean:
 ############### Build and ZIP ###############
 if args.nobuild:
     output = subprocess.run("pyinstaller --onefile Source/WorldAnvilOfflineWiki.py", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print(output.returncode)
     if args.verbose: print(output.stdout.decode())
 
     output = subprocess.run("zip dist.zip dist//WorldAnvilOfflineWiki", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print(output.returncode)
     if args.verbose: print(output.stdout.decode())
 
 
@@ -54,18 +56,21 @@ if args.nobuild:
 ############### GIT ###############
 if args.nogit:
     output = subprocess.run("git add *", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print(output.returncode)
     if args.verbose: print(output.stdout.decode())
 
 
     output = subprocess.run("git commit -m" + sys.argv[1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output.wait()
     if args.verbose: print(output.stdout.decode())
 
     output = subprocess.run("git push", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output.wait()
     if args.verbose: print(output.stdout.decode())
 
 
 
-
+subprocess.run()
 
 
 
