@@ -1,2 +1,2 @@
 # WorldAnvilOfflineWiki
-Python executable to download and search you World Anvil for information offline
+Python executable to download and search yours or any World Anvil for information offline
