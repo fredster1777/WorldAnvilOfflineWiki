@@ -38,16 +38,14 @@ def detectTables():
             resp = input("\nOr select 'New' to create a new Wiki\n")
             if resp.lower() == "new":
                 selectedTable = createTable()
+                break
             elif resp in db_files:
                 selectedTable = resp
                 break
             else:
                 print("\nInvalid Response\n")
 
-
-    print("You selected " + selectedTable)
-    quit()
-
+def readTable():
     '''
     TODO Impliment a method of using selenium to load up each individual page
 
@@ -77,6 +75,7 @@ def detectTables():
 
     '''
 
+def 
 
 def createTable():
     while True:
@@ -144,10 +143,10 @@ def click_link_by_category(url, category_list):
 
 
 def main():
-    detectTables()
-    createTable()
+    selectedTable = detectTables()
+    print("You have selected " + selectedTable)
 
-    
+
     quit()
 
 
