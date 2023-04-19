@@ -1,5 +1,7 @@
 
 import os
+import stat
+import time
 import sqlite3
 import requests
 from selenium import webdriver
@@ -23,15 +25,34 @@ def detectTables():
         while True:
             resp = input("Would you like to create a new Wiki? [y/n]")
             if resp.lower() == "y" or resp.lower() == "yes":
-                createTable()
+                selectedTable = createTable()
                 break
             elif resp.lower() == "n" or resp.lower() == "no":
                 quit()
             else:
                 print("invalid response")
+    else:
+        while True:
+            print("Please select a Wiki\n")
+            displayTableChoices(db_files)
+            resp = input("\nOr select 'New' to create a new Wiki\n")
+            if resp.lower() == "new":
+                selectedTable = createTable()
+            elif resp in db_files:
+                selectedTable = resp
+                break
+            else:
+                print("\nInvalid Response\n")
+
+
+    print("You selected " + selectedTable)
+    quit()
+
+    '''
+    TODO Impliment a method of using selenium to load up each individual page
 
     # Connect to the database
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect(selectedTable)
 
     # Create a cursor object to execute SQL commands
     c = conn.cursor()
@@ -53,6 +74,8 @@ def detectTables():
         print("The table exists.")
     else:
         print("The table does not exist.")
+
+    '''
 
 
 def createTable():
@@ -77,7 +100,6 @@ def createTable():
             print("The URL is not valid.")
 
     DatabaseName = resp.split("/")[-1]
-    print(DatabaseName)
 
 
     # Connect to a database (creates a new one if it doesn't exist)
@@ -86,6 +108,7 @@ def createTable():
     # Create a cursor object to execute SQL commands
     c = conn.cursor()
 
+    #TODO create a table that is reflective of the data i want to capture. Currently Title, link, parent, children, text1, text2
     # Create a table with columns 'id', 'name', and 'age'
     c.execute('''CREATE TABLE example_table
                 (id INT PRIMARY KEY NOT NULL,
@@ -95,6 +118,15 @@ def createTable():
     # Save changes and close the connection
     conn.commit()
     conn.close()
+    return DatabaseName 
+
+def displayTableChoices(db_files):
+    for item in db_files:
+        item_path = os.path.join("Tables", item)
+        item_stat = os.stat(item_path)
+        item_mtime = item_stat.st_mtime
+        item_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(item_mtime))
+        print(f"{item_time} {item}")
 
 
 def click_link_by_category(url, category_list):

@@ -53,7 +53,7 @@ if args.nobuild:
 if args.nogit:
     RunProcess("git add *")
 
-    RunProcess("git commit -m " + sys.argv[1])
+    RunProcess("git commit -m " + sys.argv[2])
 
     RunProcess("git push")
 
